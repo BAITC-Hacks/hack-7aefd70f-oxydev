@@ -1,0 +1,12 @@
+.git
+.env
+.venv
+.pdf-review
+.screenshots
+__pycache__
+*.pyc
+web/node_modules
+web/dist
+qadam/data/model
+qadam/data/cache
+qadam/data/demo

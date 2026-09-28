@@ -1,0 +1,726 @@
+{
+  "meta": {
+    "date": "2026-09-10",
+    "python": "3.12.3",
+    "n_corpus": 140,
+    "n_noise": 20,
+    "n_mixed": 36,
+    "n_train": 98,
+    "n_test": 42,
+    "extract_backend": "heuristic",
+    "embeddings": "char_tfidf",
+    "seed": 20260910
+  },
+  "holdout": {
+    "n": 42,
+    "accuracy": 0.9523809523809523,
+    "qwk": 0.967741935483871,
+    "macro_f1": 0.9481915933528837
+  },
+  "per_class": {
+    "weak": {
+      "precision": 0.9375,
+      "recall": 1.0,
+      "f1-score": 0.967741935483871,
+      "support": 15.0
+    },
+    "normal": {
+      "precision": 1.0,
+      "recall": 0.8333333333333334,
+      "f1-score": 0.9090909090909091,
+      "support": 12.0
+    },
+    "strong": {
+      "precision": 0.9375,
+      "recall": 1.0,
+      "f1-score": 0.967741935483871,
+      "support": 15.0
+    }
+  },
+  "subsets": {
+    "все": {
+      "n": 42,
+      "accuracy": 0.9523809523809523
+    },
+    "шумовые: вода в отличной обёртке": {
+      "n": 3,
+      "accuracy": 1.0
+    },
+    "шумовые: сильное содержание в корявой речи": {
+      "n": 3,
+      "accuracy": 1.0
+    },
+    "смешанные уровни блоков": {
+      "n": 13,
+      "accuracy": 0.8461538461538461
+    },
+    "казахский и смешанный язык": {
+      "n": 22,
+      "accuracy": 0.9090909090909091
+    }
+  },
+  "baselines": [
+    {
+      "name": "Случайно по априорному распределению",
+      "accuracy": 0.33495238095238095,
+      "qwk": -0.002813512369431435
+    },
+    {
+      "name": "Только длина ответа",
+      "accuracy": 0.35714285714285715,
+      "qwk": 0.2622950819672131
+    },
+    {
+      "name": "LLM без рубрики «оцени от 1 до 3»",
+      "accuracy": null,
+      "qwk": null
+    },
+    {
+      "name": "**Qadam AI: признаки + обученный классификатор**",
+      "accuracy": 0.9523809523809523,
+      "qwk": 0.967741935483871
+    }
+  ],
+  "calibration": {
+    "brier": 0.14510693012058537,
+    "ece": 0.1957592763940774,
+    "mean_confidence": 0.7710103821634902
+  },
+  "robustness": {
+    "paraphrase": {
+      "n": 30,
+      "mean_delta": -0.03204107274613518,
+      "median_abs_delta": 0.01690078693637212,
+      "p95_abs_delta": 0.1714454154985395,
+      "share_increased": 0.1,
+      "share_decreased": 0.23333333333333334,
+      "level_unchanged": 1.0
+    },
+    "polish": {
+      "n": 30,
+      "mean_delta": -0.02378817393685777,
+      "median_abs_delta": 0.027401468668116657,
+      "p95_abs_delta": 0.18326134982780637,
+      "share_increased": 0.1,
+      "share_decreased": 0.23333333333333334,
+      "level_unchanged": 1.0
+    },
+    "truncation": {
+      "n": 30,
+      "mean_delta": -0.14698386827161383,
+      "median_abs_delta": 0.1430541243476383,
+      "p95_abs_delta": 0.3285663785118375,
+      "share_increased": 0.0,
+      "share_decreased": 0.6666666666666666,
+      "level_unchanged": 0.9666666666666667
+    },
+    "checks": {
+      "перефраз не меняет балл": true,
+      "ИИ-полировка не поднимает балл": true,
+      "усечение Outcome и Application роняет балл": true
+    },
+    "all_passed": true
+  },
+  "extraction": {
+    "n_elements": 700,
+    "precision": 0.954,
+    "recall": 0.9734693877551021,
+    "accuracy": 0.9485714285714286,
+    "dropped_quotes": 0
+  },
+  "ablation": [
+    {
+      "variant": "все признаки",
+      "embeddings": "char_tfidf",
+      "n_features": 21,
+      "n": 42,
+      "accuracy": 0.9523809523809523,
+      "qwk": 0.967741935483871,
+      "macro_f1": 0.9481915933528837
+    },
+    {
+      "variant": "без индикаторов BARS",
+      "embeddings": "char_tfidf",
+      "n_features": 17,
+      "n": 42,
+      "accuracy": 0.8809523809523809,
+      "qwk": 0.9180327868852459,
+      "macro_f1": 0.8723390992675705
+    },
+    {
+      "variant": "без покрытия ATOLA",
+      "embeddings": "char_tfidf",
+      "n_features": 15,
+      "n": 42,
+      "accuracy": 0.9285714285714286,
+      "qwk": 0.9523809523809523,
+      "macro_f1": 0.9207949308755761
+    },
+    {
+      "variant": "без конкретности",
+      "embeddings": "char_tfidf",
+      "n_features": 16,
+      "n": 42,
+      "accuracy": 0.9761904761904762,
+      "qwk": 0.9836065573770492,
+      "macro_f1": 0.9747545582047685
+    },
+    {
+      "variant": "только длина ответа",
+      "embeddings": "none",
+      "n_features": 1,
+      "n": 42,
+      "accuracy": 0.40476190476190477,
+      "qwk": 0.11111111111111116,
+      "macro_f1": 0.31557271557271555
+    },
+    {
+      "variant": "без текстовых векторов",
+      "embeddings": "none",
+      "n_features": 21,
+      "n": 42,
+      "accuracy": 0.9523809523809523,
+      "qwk": 0.967741935483871,
+      "macro_f1": 0.9481915933528837
+    },
+    {
+      "variant": "векторы sentence-transformers",
+      "embeddings": "sbert",
+      "n_features": 21,
+      "n": 42,
+      "accuracy": 0.9523809523809523,
+      "qwk": 0.967741935483871,
+      "macro_f1": 0.9481915933528837
+    }
+  ],
+  "fairness": {
+    "n_pairs": 40,
+    "scale": "0 = weak, 1 = normal, 2 = strong; шаг между уровнями = 1.0",
+    "headline_p95_abs_delta": 0.10000096308460285,
+    "headline_attribute": "polish",
+    "hard_threshold": 1.0,
+    "target": 0.25,
+    "passes_hard_threshold": true,
+    "passes_target": true,
+    "by_attribute": {
+      "gender": {
+        "n": 10,
+        "median_abs_delta": 1.1335575637816397e-05,
+        "p95_abs_delta": 0.00011081956064701301,
+        "max_abs_delta": 0.00012094433282316963,
+        "mean_signed_delta": 2.2229586631591913e-05,
+        "direction": "женский род выше мужского",
+        "flip_rate": 0.0
+      },
+      "language": {
+        "n": 10,
+        "median_abs_delta": 0.03357744717562843,
+        "p95_abs_delta": 0.09664797047470637,
+        "max_abs_delta": 0.1040935775983518,
+        "mean_signed_delta": 0.017521456403592837,
+        "direction": "казахский выше русского",
+        "flip_rate": 0.0
+      },
+      "polish": {
+        "n": 10,
+        "median_abs_delta": 0.03438581453038318,
+        "p95_abs_delta": 0.10000096308460285,
+        "max_abs_delta": 0.14335138885367127,
+        "mean_signed_delta": -0.021106478499834276,
+        "direction": "отполированная речь выше речи с ошибками",
+        "flip_rate": 0.0
+      },
+      "settlement": {
+        "n": 10,
+        "median_abs_delta": 0.007284961459881958,
+        "p95_abs_delta": 0.018952594852443067,
+        "max_abs_delta": 0.019260908812369082,
+        "mean_signed_delta": -0.008443538460973695,
+        "direction": "город выше села",
+        "flip_rate": 0.0
+      }
+    },
+    "pairs": [
+      {
+        "pair_id": "cf-settlement-00",
+        "attribute": "settlement",
+        "level": "weak",
+        "score_a": 0.14770262840611229,
+        "score_b": 0.13555073041748184,
+        "delta": -0.01215189798863045,
+        "abs_delta": 0.01215189798863045,
+        "level_a": "weak",
+        "level_b": "weak",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-settlement-01",
+        "attribute": "settlement",
+        "level": "normal",
+        "score_a": 0.8541754502913504,
+        "score_b": 0.8349145414789814,
+        "delta": -0.019260908812369082,
+        "abs_delta": 0.019260908812369082,
+        "level_a": "normal",
+        "level_b": "normal",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-settlement-02",
+        "attribute": "settlement",
+        "level": "strong",
+        "score_a": 1.8423161366276262,
+        "score_b": 1.8410248258240645,
+        "delta": -0.0012913108035617071,
+        "abs_delta": 0.0012913108035617071,
+        "level_a": "strong",
+        "level_b": "strong",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-settlement-03",
+        "attribute": "settlement",
+        "level": "weak",
+        "score_a": 0.1715479561210468,
+        "score_b": 0.16342802269378853,
+        "delta": -0.00811993342725828,
+        "abs_delta": 0.00811993342725828,
+        "level_a": "weak",
+        "level_b": "weak",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-settlement-04",
+        "attribute": "settlement",
+        "level": "normal",
+        "score_a": 1.0376312309721678,
+        "score_b": 1.032171911939661,
+        "delta": -0.0054593190325067376,
+        "abs_delta": 0.0054593190325067376,
+        "level_a": "normal",
+        "level_b": "normal",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-settlement-05",
+        "attribute": "settlement",
+        "level": "strong",
+        "score_a": 1.8404729258916803,
+        "score_b": 1.8390003107656407,
+        "delta": -0.0014726151260395781,
+        "abs_delta": 0.0014726151260395781,
+        "level_a": "strong",
+        "level_b": "strong",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-settlement-06",
+        "attribute": "settlement",
+        "level": "weak",
+        "score_a": 0.20819139174718762,
+        "score_b": 0.18961562506798746,
+        "delta": -0.018575766679200162,
+        "abs_delta": 0.018575766679200162,
+        "level_a": "weak",
+        "level_b": "weak",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-settlement-07",
+        "attribute": "settlement",
+        "level": "normal",
+        "score_a": 1.0314148256906632,
+        "score_b": 1.0249648361981576,
+        "delta": -0.006449989492505637,
+        "abs_delta": 0.006449989492505637,
+        "level_a": "normal",
+        "level_b": "normal",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-settlement-08",
+        "attribute": "settlement",
+        "level": "strong",
+        "score_a": 1.8643388603215196,
+        "score_b": 1.8645931667948996,
+        "delta": 0.0002543064733799838,
+        "abs_delta": 0.0002543064733799838,
+        "level_a": "strong",
+        "level_b": "strong",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-settlement-09",
+        "attribute": "settlement",
+        "level": "weak",
+        "score_a": 0.14610123386187415,
+        "score_b": 0.13419328414082884,
+        "delta": -0.011907949721045308,
+        "abs_delta": 0.011907949721045308,
+        "level_a": "weak",
+        "level_b": "weak",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-language-00",
+        "attribute": "language",
+        "level": "weak",
+        "score_a": 0.16067107458254762,
+        "score_b": 0.18750304177779129,
+        "delta": 0.026831967195243667,
+        "abs_delta": 0.026831967195243667,
+        "level_a": "weak",
+        "level_b": "weak",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-language-01",
+        "attribute": "language",
+        "level": "normal",
+        "score_a": 1.0314356508295064,
+        "score_b": 1.0499963066065678,
+        "delta": 0.018560655777061452,
+        "abs_delta": 0.018560655777061452,
+        "level_a": "normal",
+        "level_b": "normal",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-language-02",
+        "attribute": "language",
+        "level": "strong",
+        "score_a": 1.8201311332147698,
+        "score_b": 1.8507261206905183,
+        "delta": 0.030594987475748514,
+        "abs_delta": 0.030594987475748514,
+        "level_a": "strong",
+        "level_b": "strong",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-language-03",
+        "attribute": "language",
+        "level": "weak",
+        "score_a": 0.11679961834655807,
+        "score_b": 0.15335952522206642,
+        "delta": 0.03655990687550835,
+        "abs_delta": 0.03655990687550835,
+        "level_a": "weak",
+        "level_b": "weak",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-language-04",
+        "attribute": "language",
+        "level": "normal",
+        "score_a": 0.9125083040507963,
+        "score_b": 1.0000560880410472,
+        "delta": 0.08754778399025087,
+        "abs_delta": 0.08754778399025087,
+        "level_a": "normal",
+        "level_b": "normal",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-language-05",
+        "attribute": "language",
+        "level": "strong",
+        "score_a": 1.770386975575901,
+        "score_b": 1.6662933979775492,
+        "delta": -0.1040935775983518,
+        "abs_delta": 0.1040935775983518,
+        "level_a": "strong",
+        "level_b": "strong",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-language-06",
+        "attribute": "language",
+        "level": "weak",
+        "score_a": 0.18710953585004247,
+        "score_b": 0.16405151242736968,
+        "delta": -0.023058023422672796,
+        "abs_delta": 0.023058023422672796,
+        "level_a": "weak",
+        "level_b": "weak",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-language-07",
+        "attribute": "language",
+        "level": "normal",
+        "score_a": 0.9530393394304787,
+        "score_b": 1.0134700523829099,
+        "delta": 0.06043071295243119,
+        "abs_delta": 0.06043071295243119,
+        "level_a": "normal",
+        "level_b": "normal",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-language-08",
+        "attribute": "language",
+        "level": "strong",
+        "score_a": 1.7621740470836529,
+        "score_b": 1.8236111859247341,
+        "delta": 0.06143713884108126,
+        "abs_delta": 0.06143713884108126,
+        "level_a": "strong",
+        "level_b": "strong",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-language-09",
+        "attribute": "language",
+        "level": "weak",
+        "score_a": 0.17258613055709854,
+        "score_b": 0.15298914250672624,
+        "delta": -0.0195969880503723,
+        "abs_delta": 0.0195969880503723,
+        "level_a": "weak",
+        "level_b": "weak",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-polish-00",
+        "attribute": "polish",
+        "level": "weak",
+        "score_a": 0.12251076767979252,
+        "score_b": 0.1621825667986444,
+        "delta": 0.03967179911885188,
+        "abs_delta": 0.03967179911885188,
+        "level_a": "weak",
+        "level_b": "weak",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-polish-01",
+        "attribute": "polish",
+        "level": "normal",
+        "score_a": 1.0915818645374644,
+        "score_b": 1.0500649057178773,
+        "delta": -0.04151695881958717,
+        "abs_delta": 0.04151695881958717,
+        "level_a": "normal",
+        "level_b": "normal",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-polish-02",
+        "attribute": "polish",
+        "level": "strong",
+        "score_a": 1.8490155292485215,
+        "score_b": 1.8229854527255884,
+        "delta": -0.0260300765229331,
+        "abs_delta": 0.0260300765229331,
+        "level_a": "strong",
+        "level_b": "strong",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-polish-03",
+        "attribute": "polish",
+        "level": "weak",
+        "score_a": 0.37607926054452245,
+        "score_b": 0.23272787169085118,
+        "delta": -0.14335138885367127,
+        "abs_delta": 0.14335138885367127,
+        "level_a": "weak",
+        "level_b": "weak",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-polish-04",
+        "attribute": "polish",
+        "level": "normal",
+        "score_a": 0.9472882840039482,
+        "score_b": 0.9943053933708009,
+        "delta": 0.04701710936685277,
+        "abs_delta": 0.04701710936685277,
+        "level_a": "normal",
+        "level_b": "normal",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-polish-05",
+        "attribute": "polish",
+        "level": "strong",
+        "score_a": 1.8458491359184168,
+        "score_b": 1.8295686868231118,
+        "delta": -0.016280449095305016,
+        "abs_delta": 0.016280449095305016,
+        "level_a": "strong",
+        "level_b": "strong",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-polish-06",
+        "attribute": "polish",
+        "level": "weak",
+        "score_a": 0.21481142940019346,
+        "score_b": 0.18571159945827898,
+        "delta": -0.029099829941914485,
+        "abs_delta": 0.029099829941914485,
+        "level_a": "weak",
+        "level_b": "weak",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-polish-07",
+        "attribute": "polish",
+        "level": "normal",
+        "score_a": 0.898871303010357,
+        "score_b": 0.8558036411395462,
+        "delta": -0.04306766187081079,
+        "abs_delta": 0.04306766187081079,
+        "level_a": "normal",
+        "level_b": "normal",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-polish-08",
+        "attribute": "polish",
+        "level": "strong",
+        "score_a": 1.8710217930368045,
+        "score_b": 1.8794599717152531,
+        "delta": 0.008438178678448649,
+        "abs_delta": 0.008438178678448649,
+        "level_a": "strong",
+        "level_b": "strong",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-polish-09",
+        "attribute": "polish",
+        "level": "weak",
+        "score_a": 0.136686032738302,
+        "score_b": 0.12984052568002774,
+        "delta": -0.006845507058274247,
+        "abs_delta": 0.006845507058274247,
+        "level_a": "weak",
+        "level_b": "weak",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-gender-00",
+        "attribute": "gender",
+        "level": "weak",
+        "score_a": 0.11790112875568194,
+        "score_b": 0.11790112875568194,
+        "delta": 0.0,
+        "abs_delta": 0.0,
+        "level_a": "weak",
+        "level_b": "weak",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-gender-01",
+        "attribute": "gender",
+        "level": "normal",
+        "score_a": 0.8448842295740214,
+        "score_b": 0.8450051739068446,
+        "delta": 0.00012094433282316963,
+        "abs_delta": 0.00012094433282316963,
+        "level_a": "normal",
+        "level_b": "normal",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-gender-02",
+        "attribute": "gender",
+        "level": "strong",
+        "score_a": 1.8362970607378026,
+        "score_b": 1.8362810650669308,
+        "delta": -1.5995670871848944e-05,
+        "abs_delta": 1.5995670871848944e-05,
+        "level_a": "strong",
+        "level_b": "strong",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-gender-03",
+        "attribute": "gender",
+        "level": "weak",
+        "score_a": 0.17244086495448746,
+        "score_b": 0.172460291257927,
+        "delta": 1.9426303439540327e-05,
+        "abs_delta": 1.9426303439540327e-05,
+        "level_a": "weak",
+        "level_b": "weak",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-gender-04",
+        "attribute": "gender",
+        "level": "normal",
+        "score_a": 0.7911812491940107,
+        "score_b": 0.791279694033109,
+        "delta": 9.84448390983772e-05,
+        "abs_delta": 9.84448390983772e-05,
+        "level_a": "normal",
+        "level_b": "normal",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-gender-05",
+        "attribute": "gender",
+        "level": "strong",
+        "score_a": 1.865469884516312,
+        "score_b": 1.865454820318863,
+        "delta": -1.5064197449010663e-05,
+        "abs_delta": 1.5064197449010663e-05,
+        "level_a": "strong",
+        "level_b": "strong",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-gender-06",
+        "attribute": "gender",
+        "level": "weak",
+        "score_a": 0.1350632546867532,
+        "score_b": 0.1350678366012289,
+        "delta": 4.581914475693116e-06,
+        "abs_delta": 4.581914475693116e-06,
+        "level_a": "weak",
+        "level_b": "weak",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-gender-07",
+        "attribute": "gender",
+        "level": "normal",
+        "score_a": 0.9859448412294655,
+        "score_b": 0.9859471926204388,
+        "delta": 2.3513909733763327e-06,
+        "abs_delta": 2.3513909733763327e-06,
+        "level_a": "normal",
+        "level_b": "normal",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-gender-08",
+        "attribute": "gender",
+        "level": "strong",
+        "score_a": 1.7745474181192156,
+        "score_b": 1.7745550250730422,
+        "delta": 7.6069538266221315e-06,
+        "abs_delta": 7.6069538266221315e-06,
+        "level_a": "strong",
+        "level_b": "strong",
+        "flipped": false
+      },
+      {
+        "pair_id": "cf-gender-09",
+        "attribute": "gender",
+        "level": "weak",
+        "score_a": 0.19190718690484357,
+        "score_b": 0.19190718690484357,
+        "delta": 0.0,
+        "abs_delta": 0.0,
+        "level_a": "weak",
+        "level_b": "weak",
+        "flipped": false
+      }
+    ]
+  }
+}

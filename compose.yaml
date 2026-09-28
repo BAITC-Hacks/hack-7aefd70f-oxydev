@@ -1,0 +1,20 @@
+services:
+  qadam:
+    build: .
+    ports:
+      - "127.0.0.1:${QADAM_PORT:-8000}:8000"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      PORT: "8000"
+    volumes:
+      - qadam-model:/app/qadam/data/model
+      - qadam-cache:/app/qadam/data/cache
+      - qadam-demo:/app/qadam/data/demo
+    restart: unless-stopped
+
+volumes:
+  qadam-model:
+  qadam-cache:
+  qadam-demo:

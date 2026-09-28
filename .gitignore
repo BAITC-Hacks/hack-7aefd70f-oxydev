@@ -1,0 +1,22 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+node_modules/
+web/dist/
+web/test-results/
+web/playwright-report/
+web/tsconfig.tsbuildinfo
+.pdf-review/
+.screenshots/
+2026-09-11-020508-04-claude-code.txt
+
+# Артефакты обучения и кэш: воспроизводятся из корпуса одной командой.
+qadam/data/model/
+qadam/data/cache/
+qadam/data/demo/
+
+# Корпус и контрфактические пары в git входят намеренно:
+# без них метрики в отчёте невоспроизводимы.
+!qadam/data/corpus/
+!qadam/data/counterfactual/

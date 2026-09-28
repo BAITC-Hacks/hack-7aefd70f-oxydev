@@ -1,0 +1,64 @@
+{
+  "competency": "leadership",
+  "backend": "template",
+  "seed": 20260910,
+  "n_answers": 140,
+  "n_noise": 20,
+  "n_pairs": 40,
+  "levels": {
+    "weak": 50,
+    "normal": 40,
+    "strong": 50
+  },
+  "distribution": {
+    "domain": {
+      "family": 25,
+      "own_project": 21,
+      "school": 25,
+      "sports": 21,
+      "volunteering": 24,
+      "work": 24
+    },
+    "length": {
+      "long": 49,
+      "medium": 39,
+      "short": 52
+    },
+    "style": {
+      "bureaucratic": 30,
+      "colloquial": 35,
+      "errors": 35,
+      "polished": 40
+    },
+    "language": {
+      "kk": 39,
+      "mixed": 42,
+      "ru": 59
+    },
+    "settlement": {
+      "city": 70,
+      "village": 70
+    },
+    "school_type": {
+      "ordinary": 70,
+      "strong": 70
+    },
+    "gender": {
+      "f": 70,
+      "m": 70
+    },
+    "noise": {
+      "None": 120,
+      "polished_weak": 10,
+      "rough_strong": 10
+    }
+  },
+  "pairs_by_attribute": {
+    "settlement": 10,
+    "language": 10,
+    "polish": 10,
+    "gender": 10
+  },
+  "rule": "в промпт генерации передаются только формулировки индикаторов нужного уровня; оценочные слова запрещены и проверяются",
+  "source_rubric": "docs/01-context.md §5.4"
+}
