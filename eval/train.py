@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
-"""Обучение модели и полный отчёт о валидации.
+"""Обучение модели и машинно-читаемый отчёт о валидации.
 
-Пишет два файла:
-
-* ``eval/metrics.json`` — все числа машинно-читаемо, чтобы вставлять на слайд;
-* ``eval/report.md``    — тот же отчёт для чтения человеком.
-
-Запуск: ``python -m eval.train``
+Запуск: ``python -m eval.train``. Результат сохраняется в
+``eval/metrics.json`` и ``eval/fairness.json``.
 """
 
 from __future__ import annotations
@@ -14,6 +10,7 @@ from __future__ import annotations
 import argparse
 import json
 import platform
+import sys
 from datetime import date
 from pathlib import Path
 from typing import Sequence
@@ -47,7 +44,6 @@ from qadam.data.rubric import LEVELS, LEVEL_LABELS_RU, LEVEL_ORDINAL, Level
 
 EVAL_DIR = Path(__file__).resolve().parent
 METRICS_FILE = EVAL_DIR / "metrics.json"
-REPORT_FILE = EVAL_DIR / "report.md"
 
 
 def ordinals(labels: Sequence[Level]) -> list[int]:
@@ -369,6 +365,9 @@ def build_report(m: dict, gold: Sequence[Level], pred: Sequence[Level]) -> str:
 # --------------------------------------------------------------------------- #
 
 def main(argv: list[str] | None = None) -> int:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+
     ap = argparse.ArgumentParser(description="Обучение и валидация")
     ap.add_argument("--embeddings", choices=("char_tfidf", "sbert", "none"),
                     default="char_tfidf")
@@ -464,17 +463,16 @@ def main(argv: list[str] | None = None) -> int:
     }
 
     METRICS_FILE.write_text(json.dumps(metrics, ensure_ascii=False, indent=2),
-                            encoding="utf-8")
-    REPORT_FILE.write_text(build_report(metrics, gold, pred), encoding="utf-8")
+                            encoding="utf-8", newline="\n")
     fairness_module.REPORT_FILE.write_text(
-        json.dumps(metrics["fairness"], ensure_ascii=False, indent=2), encoding="utf-8")
+        json.dumps(metrics["fairness"], ensure_ascii=False, indent=2),
+        encoding="utf-8", newline="\n")
 
     print(f"\naccuracy {metrics['holdout']['accuracy']:.3f} | "
           f"QWK {metrics['holdout']['qwk']:.3f} | "
           f"fairness p95 |Δ| {metrics['fairness']['headline_p95_abs_delta']:.3f}")
     print(f"модель:  {MODEL_FILE}")
     print(f"числа:   {METRICS_FILE}")
-    print(f"отчёт:   {REPORT_FILE}")
     return 0
 
 
