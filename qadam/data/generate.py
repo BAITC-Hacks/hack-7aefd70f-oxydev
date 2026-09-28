@@ -2,10 +2,10 @@
 """Генерация синтетического корпуса ответов по компетенции «Лидерские способности».
 
 Зачем синтетика: обезличенные реальные оценки заказчик открывает только на этапе
-внедрения (docs/01-context.md §6). До тех пор корпус порождается из опубликованной
+внедрения. До тех пор корпус порождается из опубликованной
 рубрики BARS.
 
-ГЛАВНОЕ ПРАВИЛО ГЕНЕРАЦИИ (docs/02-solution-spec.md §4.1):
+ГЛАВНОЕ ПРАВИЛО ГЕНЕРАЦИИ (docs/EVALUATION.md):
 в порождающий промпт передаются ТОЛЬКО дословные формулировки индикаторов нужного
 уровня. Слова «слабый», «сильный», «хороший кандидат» в промпт не попадают — иначе
 метка станет пересказом суждения модели, а не свойством текста. Для LLM-бэкенда это
@@ -948,7 +948,7 @@ def build_corpus(per_level: int = 40, seed: int = SEED) -> list[dict]:
 
 
 #: «Шумовые» примеры: содержание одного уровня в обёртке другого.
-#: docs/02-solution-spec.md §4.1 — самые важные примеры корпуса.
+#: Самые важные стресс-примеры корпуса.
 NOISE_PLANS: dict[str, tuple[tuple[Segment, int, Level], ...]] = {
     "polished_weak": (("action", 0, "weak"), ("thinking", 0, "weak"),
                       ("outcome", 1, "weak"), ("learnings", 1, "weak")),
@@ -1055,7 +1055,7 @@ def build_pairs(n_per_attribute: int = 10, seed: int = SEED) -> list[dict]:
 
 
 # --------------------------------------------------------------------------- #
-# Наборы для тестов устойчивости (docs/02-solution-spec.md §5.3)
+# Наборы для тестов устойчивости (docs/EVALUATION.md)
 # --------------------------------------------------------------------------- #
 
 def _variant_shifted(plan: ContentPlan) -> ContentPlan:
@@ -1126,7 +1126,7 @@ def assert_no_judgment_words(prompt: str) -> None:
     """Промпт генерации не должен содержать оценочных слов.
 
     Иначе метка перестаёт быть свойством текста и становится пересказом
-    суждения модели (docs/02-solution-spec.md §4.1).
+    суждения модели (docs/EVALUATION.md).
     """
     low = prompt.lower()
     found = [w for w in FORBIDDEN_IN_PROMPT if w in low]
@@ -1269,7 +1269,7 @@ def read_jsonl(path: Path) -> list[dict]:
 
 
 def build_blind_sample(rows: list[dict], n: int, seed: int = SEED) -> list[dict]:
-    """Файл для слепой ручной разметки (docs/02-solution-spec.md §4.2).
+    """Файл для слепой ручной разметки (docs/EVALUATION.md).
 
     Метка не записывается: размечающий не должен видеть уровень генератора.
     """
@@ -1301,7 +1301,7 @@ def corpus_meta(rows: list[dict], pairs: list[dict], backend: str, seed: int) ->
                                for a in CF_ATTRIBUTES},
         "rule": ("в промпт генерации передаются только формулировки индикаторов "
                  "нужного уровня; оценочные слова запрещены и проверяются"),
-        "source_rubric": "docs/01-context.md §5.4",
+        "source_rubric": "published AI Leader ID BARS example",
     }
 
 

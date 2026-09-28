@@ -94,7 +94,7 @@ def calibration_scores(proba: np.ndarray, gold: Sequence[Level],
 # --------------------------------------------------------------------------- #
 
 def robustness(model: LeadershipModel, backend: str) -> dict:
-    """Перефраз, ИИ-полировка, усечение (docs/02-solution-spec.md §5.3)."""
+    """Перефраз, ИИ-полировка и усечение для robustness-проверки."""
     sets = build_robustness_sets()
     out: dict[str, dict] = {}
     for name, pairs in sets.items():

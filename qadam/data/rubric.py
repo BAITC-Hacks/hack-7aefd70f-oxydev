@@ -3,8 +3,7 @@
 
 Единственный источник истины по методологии для всего проекта.
 Формулировки поведенческих индикаторов и уточняющих вопросов ATOLA взяты
-дословно из материалов заказчика (см. docs/01-context.md, разделы 5.2 и 5.4;
-первоисточник — презентация «AI Leader ID», inVision U × Talent Craft).
+из опубликованного примера «AI Leader ID» (inVision U × Talent Craft).
 
 Модуль намеренно декларативный: здесь нет ни логики сопоставления текста
 с индикаторами (см. qadam/core/features.py), ни оценивания.
@@ -15,8 +14,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Literal
 
-SOURCE_BARS = "docs/01-context.md §5.4 (презентация «AI Leader ID», слайд BARS)"
-SOURCE_ATOLA = "docs/01-context.md §5.2 (методология интервью ATOLA)"
+SOURCE_BARS = "published AI Leader ID example (BARS slide)"
+SOURCE_ATOLA = "published AI Leader ID example (ATOLA interview model)"
 
 Level = Literal["weak", "normal", "strong"]
 
@@ -275,12 +274,12 @@ LEADERSHIP = Competency(
 #: Компетенции MVP. Остальные восемь добавляются на этапе внедрения.
 COMPETENCIES: dict[str, Competency] = {LEADERSHIP.id: LEADERSHIP}
 
-#: Этическая граница (docs/01-context.md §8.1): по этим блокам модель
+#: Этическая граница: по этим блокам модель
 #: не выставляет численный балл ни при каких условиях. Она только отмечает,
 #: что тема прозвучала, и предлагает интервьюеру уточняющие вопросы.
 NEVER_SCORED_BLOCKS: tuple[str, ...] = ("wounded_leadership", "values")
 
-#: Фоновые признаки (docs/01-context.md §8.2). Никогда не входят в модель
+#: Фоновые признаки. Никогда не входят в модель
 #: как предикторы. Хранятся только как метаданные корпуса для fairness-аудита.
 BACKGROUND_ATTRIBUTES: tuple[str, ...] = (
     "settlement",   # город / село

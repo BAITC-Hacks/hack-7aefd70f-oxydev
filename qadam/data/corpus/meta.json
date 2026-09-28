@@ -60,5 +60,5 @@
     "gender": 10
   },
   "rule": "в промпт генерации передаются только формулировки индикаторов нужного уровня; оценочные слова запрещены и проверяются",
-  "source_rubric": "docs/01-context.md §5.4"
+  "source_rubric": "published AI Leader ID BARS example"
 }
