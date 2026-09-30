@@ -480,7 +480,7 @@ export default function App() {
       <aside className="sidebar">
         <div className="brand-lockup">
           <div className="brand-symbol" aria-hidden="true"><i /><i /><i /><i /></div>
-          <div><strong>Qadam AI</strong><span>Отбор кандидатов · inVision U</span></div>
+          <div><strong>Qadam AI</strong><span>для inVision U</span></div>
         </div>
         <div className="sidebar-caption">РАБОЧЕЕ ПРОСТРАНСТВО</div>
         <nav className="side-nav" aria-label="Разделы">
