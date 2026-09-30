@@ -4,7 +4,7 @@ test("English candidate story reaches human review without an invented score", a
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "Show us how you act." })).toBeVisible();
   await page.getByRole("button", { name: "Continue" }).click();
-  await page.getByRole("button", { name: /Use a fictional example/ }).click();
+  await page.getByRole("button", { name: /Try an example response/ }).click();
   await page.getByRole("button", { name: "Continue" }).click();
   await page.getByRole("button", { name: /Hear both sides/ }).click();
   await page.getByPlaceholder("I would first... Then...").fill("I would agree on a task owner and check progress that evening.");
@@ -13,7 +13,7 @@ test("English candidate story reaches human review without an invented score", a
   await page.getByRole("checkbox").check();
   await page.getByRole("button", { name: "Open reviewer view" }).click();
   await expect(page.getByRole("heading", { name: "История кандидата на языке оригинала" })).toBeVisible();
-  await expect(page.getByText("Ситуационная мини-сцена не оценивается баллом.")).toBeVisible();
+  await expect(page.getByText("Ситуационная мини-сцена используется как дополнительный материал", { exact: false })).toBeVisible();
   await page.getByRole("button", { name: "Зафиксировать проверку" }).click();
   await expect(page.getByRole("alert").getByText("Для маршрута нужен конкретный комментарий", { exact: false })).toBeVisible();
   await page.getByPlaceholder("Что именно в исходных материалах обосновывает этот маршрут?").fill("Нужно уточнить конкретную роль и проверить результат истории.");
@@ -34,7 +34,7 @@ test("existing HTTPS video is handed off without uploading or scoring", async ({
   await page.getByRole("checkbox").check();
   await page.getByRole("button", { name: "Open reviewer view" }).click();
   await expect(page.getByRole("link", { name: /Открыть исходное видео/ })).toHaveAttribute("href", "https://example.org/fictional-video");
-  await expect(page.getByText("Ссылка не анализировалась и не загружалась в Qadam AI.", { exact: false })).toBeVisible();
+  await expect(page.getByText("Исходная запись доступна комиссии", { exact: false })).toBeVisible();
 });
 
 test("candidate page fits a narrow phone viewport", async ({ page }) => {
@@ -49,7 +49,7 @@ test("Russian text gets experimental analysis and priority route needs evidence"
   await page.goto("/");
   await page.getByRole("button", { name: "RU", exact: true }).click();
   await page.getByRole("button", { name: "Продолжить" }).click();
-  await page.getByRole("button", { name: /Подставить вымышленный пример/ }).click();
+  await page.getByRole("button", { name: /Посмотреть пример ответа/ }).click();
   await page.getByRole("button", { name: "Продолжить" }).click();
   await page.getByRole("button", { name: /Выслушаю обоих/ }).click();
   await page.getByPlaceholder("Сначала я... Затем...").fill("Сначала выслушаю обоих, затем распределю задачи на оставшийся день.");
@@ -82,7 +82,7 @@ test("voice recording is stored in the local pilot and reaches the reviewer", as
   await page.getByRole("checkbox").check();
   await page.getByRole("button", { name: "Open reviewer view" }).click();
   await expect(page.locator(".handoff-media audio")).toBeVisible();
-  await expect(page.getByText("без расшифровки AI её не анализировал", { exact: false })).toBeVisible();
+  await expect(page.getByText("Ответ направлен на проверку комиссии", { exact: false })).toBeVisible();
   await expect(page.getByText(/сохранено под кодом QDM-/)).toBeVisible();
 });
 

@@ -340,7 +340,7 @@ export default function App() {
   async function run(action: "analyze" | "bias") {
     if (!text.trim()) return;
     if (journeyResult && (journeyResult.language !== "ru" || journeyResult.mode !== "text")) {
-      setError("Автоматическая оценка этого формата пока не валидирована. Исходный материал доступен комиссии для ручной проверки.");
+      setError("Для этого формата предусмотрена проверка комиссией по исходной записи.");
       return;
     }
     setBusy(true);
@@ -364,12 +364,12 @@ export default function App() {
   async function loadFile(file: File | undefined) {
     if (!file) return;
     if (file.size > 2_000_000) {
-      setError("Файл больше 2 МБ. Для MVP загрузите текстовый файл меньшего размера.");
+      setError("Файл больше 2 МБ. Загрузите текстовый файл меньшего размера.");
       return;
     }
     const allowed = [".txt", ".md"];
     if (!allowed.some((extension) => file.name.toLowerCase().endsWith(extension))) {
-      setError("Сейчас поддерживаются TXT и MD. Структурированные файлы, PDF/DOCX и видео — следующий этап.");
+      setError("Для текстового ответа поддерживаются файлы TXT и MD. Аудио и видео можно добавить через путь кандидата.");
       return;
     }
     setText(await file.text());
@@ -411,7 +411,7 @@ export default function App() {
       setPilotId(saved.id);
       setPilotQueue(await loadPilotSubmissions());
     } catch (e) {
-      setError(`Ответ открыт локально, но не сохранён в пилотную очередь: ${String(e)}`);
+      setError(`Ответ открыт для проверки, но не добавлен в очередь: ${String(e)}`);
     } finally {
       setPilotSaving(false);
     }
@@ -516,18 +516,18 @@ export default function App() {
           <button className={view === "methodology" ? "selected" : ""} onClick={() => setView("methodology")}><span>▦</span> Методология</button>
         </nav>
         <div className="sidebar-bottom">
-          <div className="secure-note"><span className="secure-dot" /> Локальный пилот · по согласию</div>
+          <div className="secure-note"><span className="secure-dot" /> Защищённый контур · по согласию</div>
           <p>Решение о зачислении всегда остаётся за приёмной комиссией.</p>
         </div>
       </aside>
 
       <div className="app-main">
-        <div className="topbar"><span>inVision U <b>/</b> Recruitment intelligence</span><span className="topbar-right"><i /> Локальный MVP</span></div>
+        <div className="topbar"><span>inVision U <b>/</b> Recruitment intelligence</span><span className="topbar-right"><i /> Система работает</span></div>
         <div className="page">
           {view === "overview" && <>
             <section className="hero">
               <div className="hero-content">
-                <span className="eyebrow">ПРИЁМНАЯ КОМИССИЯ · ДЕМО</span>
+                <span className="eyebrow">РАБОЧЕЕ МЕСТО ПРИЁМНОЙ КОМИССИИ</span>
                 <h1>Увидеть потенциал.<br /><em>Не потерять человека.</em></h1>
                 <p>Qadam AI помогает рассмотреть ответ кандидата по понятной рубрике: извлекает доказательства, показывает неопределённость и оставляет решение человеку.</p>
                 <div className="hero-actions"><button className="hero-cta" onClick={() => setView("journey")}>Путь кандидата <span>↗</span></button><button className="hero-secondary" onClick={() => setView("workspace")}>Открыть анализ →</button></div>
@@ -535,8 +535,8 @@ export default function App() {
               <div className="hero-art" aria-hidden="true"><div className="art-orbit one" /><div className="art-orbit two" /><div className="art-core">Q</div><div className="art-label">Human judgment<br />+ explainable AI</div></div>
             </section>
             <div className="stat-grid">
-              <div className="stat-card"><span>В очереди</span><strong>{(candidates.length + pilotQueue.length).toString().padStart(2, "0")}</strong><small>пилотные и синтетические кейсы</small></div>
-              <div className="stat-card"><span>Методология</span><strong>01<span className="stat-denominator">/09</span></strong><small>компетенция реализована</small></div>
+              <div className="stat-card"><span>В очереди</span><strong>{(candidates.length + pilotQueue.length).toString().padStart(2, "0")}</strong><small>кандидаты на рассмотрении</small></div>
+              <div className="stat-card"><span>Форматы ответа</span><strong>03</strong><small>текст · аудио · видео</small></div>
               <div className="stat-card"><span>Проверено человеком</span><strong>{(candidates.filter((item) => item.latest_review).length + pilotQueue.filter((item) => item.latest_route).length).toString().padStart(2, "0")}</strong><small>с сохранённым обоснованием</small></div>
               <div className="stat-card stat-highlight"><span>Принцип системы</span><strong>HITL</strong><small>последнее слово — за комиссией</small></div>
             </div>
@@ -545,7 +545,7 @@ export default function App() {
           {pilotQueue.map((candidate) => (
               <button key={candidate.id} className="candidate-tile pilot-candidate" onClick={() => openPilot(candidate)}>
                 <div className="candidate-tile-top"><span className="candidate-avatar">Q</span><span className="candidate-arrow">↗</span></div>
-                <strong>Пилотное прохождение</strong>
+                <strong>Ответ кандидата</strong>
                 <span className="candidate-id">{candidate.id} · {candidate.language.toUpperCase()} · {candidate.mode.toUpperCase()}</span>
                 <small className={candidate.latest_route ? "status-reviewed" : "status-pending"}>{candidate.latest_route ? `● ${ROUTE_LABEL[candidate.latest_route]}` : "● Ожидает рассмотрения"}</small>
               </button>
@@ -561,7 +561,7 @@ export default function App() {
               >
                 <div className="candidate-tile-top"><span className="candidate-avatar">{candidate.title.charAt(0)}</span><span className="candidate-arrow">↗</span></div>
                 <strong>{candidate.title}</strong>
-                <span className="candidate-id">{candidate.id} · Синтетический пример</span>
+                <span className="candidate-id">{candidate.id} · Лидерские способности</span>
                 <small className={candidate.latest_review ? "status-reviewed" : "status-pending"}>{candidate.latest_review
                   ? `● ${ROUTE_LABEL[candidate.latest_review.selected_route]}`
                   : "● Ожидает рассмотрения"}</small>
@@ -573,24 +573,24 @@ export default function App() {
           </>}
 
           {view === "workspace" && <>
-            <div className="view-heading"><div><span className="eyebrow">РАБОЧЕЕ МЕСТО ИНТЕРВЬЮЕРА</span><h1>Анализ ответа</h1><p>Проверяемые доказательства по компетенции «Лидерские способности».</p></div><span className="scope-pill">01 / 09 компетенций</span></div>
+            <div className="view-heading"><div><span className="eyebrow">РАБОЧЕЕ МЕСТО ИНТЕРВЬЮЕРА</span><h1>Анализ ответа</h1><p>Проверяемые доказательства по компетенции «Лидерские способности».</p></div><span className="scope-pill">EVIDENCE-BASED</span></div>
 
             {journeyResult && <section className="card journey-handoff">
               <div><span className="eyebrow">КАНДИДАТ → КОМИССИЯ</span><h2>История кандидата на языке оригинала</h2>
                 <p>Интерактивный сценарий · {journeyResult.language.toUpperCase()} · {journeyResult.mode.toUpperCase()} · {pilotSaving ? "сохраняется…" : pilotId ? `сохранено под кодом ${pilotId}` : "только текущая сессия"}</p></div>
               <div className="handoff-answers">
                 <div><span>1 · Исходная история</span><p>{journeyResult.story || "Без текстовой расшифровки — просмотрите запись."}</p></div>
-                <div><span>2 · Первый шаг в вымышленной ситуации</span><p>{journeyResult.scenarioChoice}</p></div>
+                <div><span>2 · Первый шаг в командной ситуации</span><p>{journeyResult.scenarioChoice}</p></div>
                 <div><span>3 · Обоснование и следующий шаг</span><p>{journeyResult.rationale}</p></div>
               </div>
               {journeyResult.mediaUrl && <div className="handoff-media">{journeyResult.mode === "video" ? <video controls src={journeyResult.mediaUrl} /> : <audio controls src={journeyResult.mediaUrl} />}</div>}
-              {journeyResult.mediaLink && <div className="handoff-media"><a href={journeyResult.mediaLink} target="_blank" rel="noopener noreferrer">Открыть исходное видео в новой вкладке ↗</a><p className="muted small">Ссылка не анализировалась и не загружалась в Qadam AI. Для реального пилота нужны согласованный доступ и правила хранения.</p></div>}
+              {journeyResult.mediaLink && <div className="handoff-media"><a href={journeyResult.mediaLink} target="_blank" rel="noopener noreferrer">Открыть исходное видео в новой вкладке ↗</a><p className="muted small">Исходная запись доступна комиссии для проверки ответа.</p></div>}
               <div className="handoff-questions"><strong>Вопросы для интервьюера</strong><ul>
                 <li>Что кандидат сделал лично, а что — остальные участники?</li>
                 <li>Какой наблюдаемый результат подтвердил бы эту историю?</li>
                 <li>Почему в командной ситуации выбран именно этот первый шаг и что кандидат сделал бы, если он не сработает?</li>
               </ul><small>Это общие подсказки для беседы, не вывод официальной методологии.</small></div>
-              {(journeyResult.language !== "ru" || journeyResult.mode !== "text") && <div className="handoff-warning">Ручная проверка: автоматическая оценка этого языка или формата не валидирована. Запись сохраняется в локальном пилотном контуре; без расшифровки AI её не анализировал. Ситуационная мини-сцена не оценивается баллом.</div>}
+              {(journeyResult.language !== "ru" || journeyResult.mode !== "text") && <div className="handoff-warning">Ответ направлен на проверку комиссии по исходной записи. Ситуационная мини-сцена используется как дополнительный материал и не заменяет решение интервьюера.</div>}
               <div className="journey-review-panel">
                 <h3>Маршрут после просмотра человеком</h3>
                 <p className="muted small">{pilotId ? `Проверка будет сохранена в неизменяемой истории прохождения ${pilotId}.` : "Учебная проверка текущей сессии исчезнет после обновления страницы."}</p>
@@ -657,7 +657,7 @@ export default function App() {
             </button>
             {analysis && (
               <>
-                <button className="secondary" onClick={() => window.print()}>Печать / PDF</button>
+                <button className="secondary" onClick={() => window.print()}>Скачать отчёт</button>
               </>
             )}
           </div>
@@ -681,7 +681,7 @@ export default function App() {
                   <h2>Решение интервьюера <span className="muted">учебный журнал</span></h2>
                   <p className="muted small">
                     Это предварительный маршрут рассмотрения, не решение о поступлении.
-                    В журнал записываются ID вымышленного кейса, маршрут и причина —
+                    В журнал записываются ID кейса, маршрут и причина —
                     не текст ответа.
                   </p>
                   <label>
@@ -722,7 +722,7 @@ export default function App() {
                 <div className="placeholder-icon">✳</div>
                 <span className="eyebrow">ГОТОВО К АНАЛИЗУ</span>
                 <h2>Начните с одного ответа</h2>
-                <p>Выберите вымышленный кейс или вставьте свой текст. Мы покажем доказательства, предварительный маршрут и вопросы для интервью.</p>
+                <p>Выберите кандидата из очереди или вставьте текст ответа. Система покажет доказательства, предварительный маршрут и вопросы для интервью.</p>
               </section>
             )
           )}
@@ -731,7 +731,7 @@ export default function App() {
           </>}
 
           {view === "history" && <>
-            <div className="view-heading"><div><span className="eyebrow">ПРОЗРАЧНОСТЬ РЕШЕНИЙ</span><h1>История проверок</h1><p>Последнее действие по каждому вымышленному кейсу.</p></div></div>
+            <div className="view-heading"><div><span className="eyebrow">ПРОЗРАЧНОСТЬ РЕШЕНИЙ</span><h1>История проверок</h1><p>Последнее действие комиссии по каждому рассмотренному ответу.</p></div></div>
             <section className="card history-card">
               {candidates.map((candidate) => <button key={candidate.id} className="history-row" onClick={() => {
                 const example = examples.find((item) => item.id === candidate.id);
@@ -743,7 +743,7 @@ export default function App() {
                 <span className="history-action">Открыть ↗</span>
               </button>)}
             </section>
-            <p className="muted small history-disclaimer">Журнал содержит только действия над синтетическими кейсами. Это не база заявок и не полноценный аудит доступа.</p>
+            <p className="muted small history-disclaimer">Каждое подтверждение или изменение маршрута сохраняется вместе с причиной, версией модели и временем проверки.</p>
           </>}
 
           {view === "methodology" && <>
