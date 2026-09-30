@@ -56,7 +56,7 @@ test("Russian text gets experimental analysis and priority route needs evidence"
   await page.getByRole("button", { name: "Продолжить" }).click();
   await page.getByRole("checkbox").check();
   await page.getByRole("button", { name: "Открыть кабинет комиссии" }).click();
-  await expect(page.getByRole("heading", { name: "Разбор ATOLA" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Структура ответа" })).toBeVisible();
   await page.getByLabel("Следующий шаг").selectOption("priority_interview");
   await page.getByPlaceholder("Коротко объясните решение комиссии").fill("Кандидат описал конкретные действия и измеримый результат.");
   await page.getByRole("button", { name: "Сохранить решение" }).click();
@@ -103,5 +103,5 @@ test("provisional nine-block framework is visible and clearly labelled", async (
   await expect(page.getByText("ДЛЯ СОГЛАСОВАНИЯ")).toBeVisible();
   await expect(page.locator(".qef-item")).toHaveCount(9);
   await expect(page.getByText("Ценности в действии", { exact: true })).toBeVisible();
-  await expect(page.getByText("Развитие через трудности", { exact: true })).toBeVisible();
+  await expect(page.getByText("Развитие через трудности", { exact: true }).first()).toBeVisible();
 });

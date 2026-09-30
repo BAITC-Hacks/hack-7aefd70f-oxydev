@@ -30,6 +30,12 @@ const LEVEL_LABEL: Record<Level, string> = {
   normal: "Нормально",
   strong: "Высоко",
 };
+const ATTRIBUTE_LABEL: Record<string, string> = {
+  settlement: "место проживания",
+  language: "язык ответа",
+  gender: "пол кандидата",
+  polish: "стиль изложения",
+};
 const ROUTE_LABEL: Record<Route, string> = {
   manual_review: "Уточнить ответ",
   priority_interview: "Пригласить в первую очередь",
@@ -44,8 +50,8 @@ const COMPETENCY_MAP = [
   ["05", "Ценности", "Оценка комиссией"],
   ["06", "Предыдущий опыт", "Требует настройки"],
   ["07", "Интеллект", "Требует настройки"],
-  ["08", "Purpose-driven leadership", "Требует настройки"],
-  ["09", "Wounded leadership", "Оценка комиссией"],
+  ["08", "Лидерство с ясной целью", "Требует настройки"],
+  ["09", "Развитие через трудности", "Оценка комиссией"],
 ] as const;
 
 function Quote({ children }: { children: string }) {
@@ -77,9 +83,9 @@ function AtolaZone({ data }: { data: Analysis }) {
   return (
     <section className="card">
       <h2>
-        Разбор ATOLA
+        Структура ответа
         <span className="muted">
-          покрыто {Math.round(data.atola_coverage * 5)} из 5
+          найдено {Math.round(data.atola_coverage * 5)} из 5 элементов
         </span>
       </h2>
       <ul className="atola">
@@ -110,7 +116,7 @@ function LevelZone({ data }: { data: Analysis }) {
   return (
     <section className="card">
       <h2>
-        Уровень
+        Предварительная оценка
         <span className="muted">решение принимает человек</span>
       </h2>
       <div className={`level level-${data.level}`}>{data.level_label}</div>
@@ -126,7 +132,7 @@ function LevelZone({ data }: { data: Analysis }) {
       </div>
       <Probabilities values={data.probabilities} />
 
-      <h3>Сработавшие индикаторы</h3>
+      <h3>Что подтверждает результат</h3>
       {data.indicators.length === 0 && (
         <p className="muted">Ни один индикатор не подтверждён цитатой.</p>
       )}
@@ -144,36 +150,6 @@ function LevelZone({ data }: { data: Analysis }) {
         ))}
       </ul>
 
-      <h3>Вклад признаков в этот балл</h3>
-      <ul className="features">
-        {data.features.map((feature) => (
-          <li key={feature.name}>
-            <span className="feature-label">{feature.label}</span>
-            <span className="feature-value">{feature.value}</span>
-            <span className="feature-bar">
-              <span
-                className={
-                  feature.contribution >= 0 ? "feature-plus" : "feature-minus"
-                }
-                style={{
-                  width: `${Math.min(Math.abs(feature.contribution) * 45, 100)}%`,
-                }}
-              />
-            </span>
-            <span className="feature-contribution">
-              {feature.contribution > 0 ? "+" : ""}
-              {feature.contribution}
-            </span>
-          </li>
-        ))}
-      </ul>
-      <p className="muted small">
-        Текстовые векторы целиком: {data.text_contribution}. Разбор выполнен
-        слоем извлечения «{data.backend}».
-      </p>
-      <p className="muted small provenance">
-        Версия оценки {data.provenance.model_version} · правила {data.provenance.methodology}
-      </p>
     </section>
   );
 }
@@ -184,7 +160,7 @@ function HintsZone({ data }: { data: Analysis }) {
       <h2>Что спросить на интервью</h2>
       {data.sensitive.map((item) => (
         <div key={item.note} className="sensitive">
-          <strong>Модель не выставляет балл по этому блоку.</strong>
+          <strong>Этот блок оценивает комиссия.</strong>
           <p>{item.note}</p>
           <ul>
             {item.questions.map((question) => (
@@ -242,7 +218,7 @@ function BiasZone({ data }: { data: Counterfactual }) {
         <span className="muted">{data.scale}</span>
       </h2>
       <p className="muted small">
-        Один и тот же ответ, изменён только фоновый признак «{data.attribute}».
+        Один и тот же ответ, изменён только один параметр: «{ATTRIBUTE_LABEL[data.attribute] ?? data.attribute}».
         {data.synthetic_prefix
           ? " В тексте не было упоминания села или города, поэтому к обоим вариантам добавлено одно предложение с разным значением признака."
           : " Изменено только упоминание места в самом ответе."}
@@ -504,15 +480,16 @@ export default function App() {
       <aside className="sidebar">
         <div className="brand-lockup">
           <div className="brand-symbol" aria-hidden="true"><i /><i /><i /><i /></div>
-          <div><strong>Qadam AI</strong><span>Leader ID · inVision U</span></div>
+          <div><strong>Qadam AI</strong><span>Отбор кандидатов · inVision U</span></div>
         </div>
         <div className="sidebar-caption">РАБОЧЕЕ ПРОСТРАНСТВО</div>
         <nav className="side-nav" aria-label="Разделы">
-          <button onClick={() => setView("journey")}><span>✦</span> Путь кандидата</button>
-          <button className={view === "overview" ? "selected" : ""} onClick={() => setView("overview")}><span>◫</span> Обзор</button>
-          <button className={view === "workspace" ? "selected" : ""} onClick={() => setView("workspace")}><span>◈</span> Анализ ответа</button>
+          <button onClick={() => setView("journey")}><span>✦</span> Анкета кандидата</button>
+          <button className={view === "overview" ? "selected" : ""} onClick={() => setView("overview")}><span>◫</span> Кандидаты</button>
+          <button className={view === "workspace" ? "selected" : ""} onClick={() => setView("workspace")}><span>◈</span> Проверка ответа</button>
+          <div className="nav-divider">ДОПОЛНИТЕЛЬНО</div>
           <button className={view === "history" ? "selected" : ""} onClick={() => setView("history")}><span>◷</span> История проверок</button>
-          <button className={view === "methodology" ? "selected" : ""} onClick={() => setView("methodology")}><span>▦</span> Методология</button>
+          <button className={view === "methodology" ? "selected" : ""} onClick={() => setView("methodology")}><span>▦</span> Правила оценки</button>
         </nav>
         <div className="sidebar-bottom">
           <div className="secure-note"><span className="secure-dot" /> Доступ для приёмной комиссии</div>
@@ -529,17 +506,16 @@ export default function App() {
                 <span className="eyebrow">РАБОЧЕЕ МЕСТО ПРИЁМНОЙ КОМИССИИ</span>
                 <h1>Увидеть потенциал.<br /><em>Не потерять человека.</em></h1>
                 <p>Qadam AI находит в ответе конкретные действия и результаты, показывает подтверждающие цитаты и помогает комиссии подготовиться к интервью.</p>
-                <div className="hero-actions"><button className="hero-cta" onClick={() => setView("journey")}>Путь кандидата <span>↗</span></button><button className="hero-secondary" onClick={() => setView("workspace")}>Открыть анализ →</button></div>
+                <div className="hero-actions"><button className="hero-cta" onClick={() => setView("journey")}>Открыть анкету <span>↗</span></button><button className="hero-secondary" onClick={() => setView("workspace")}>Проверить ответ →</button></div>
               </div>
               <div className="hero-art" aria-hidden="true"><div className="art-orbit one" /><div className="art-orbit two" /><div className="art-core">Q</div><div className="art-label">Факты в ответе<br />Решение комиссии</div></div>
             </section>
-            <div className="stat-grid">
-              <div className="stat-card"><span>В очереди</span><strong>{(candidates.length + pilotQueue.length).toString().padStart(2, "0")}</strong><small>кандидаты на рассмотрении</small></div>
-              <div className="stat-card"><span>Форматы ответа</span><strong>03</strong><small>текст · аудио · видео</small></div>
-              <div className="stat-card"><span>Проверено человеком</span><strong>{(candidates.filter((item) => item.latest_review).length + pilotQueue.filter((item) => item.latest_route).length).toString().padStart(2, "0")}</strong><small>с сохранённым обоснованием</small></div>
-              <div className="stat-card stat-highlight"><span>Кто принимает решение</span><strong>КОМИССИЯ</strong><small>а не алгоритм</small></div>
+            <div className="process-grid" aria-label="Как работает сервис">
+              <div className="process-step"><b>1</b><div><strong>Кандидат отвечает</strong><span>Текстом, голосом или видео</span></div></div>
+              <div className="process-step"><b>2</b><div><strong>Qadam находит факты</strong><span>Действия, результаты и цитаты</span></div></div>
+              <div className="process-step"><b>3</b><div><strong>Комиссия решает</strong><span>И сохраняет своё объяснение</span></div></div>
             </div>
-            <div className="section-title"><div><span className="eyebrow">РАБОЧИЙ ПОТОК</span><h2>Очередь на рассмотрение</h2></div><span className="section-aside">Нажмите на кейс, чтобы открыть полный разбор →</span></div>
+            <div className="section-title"><div><span className="eyebrow">КАНДИДАТЫ</span><h2>Ожидают проверки</h2></div><span className="section-aside">Выберите кандидата, чтобы открыть ответ →</span></div>
             <section className="candidate-list">
           {pilotQueue.map((candidate) => (
               <button key={candidate.id} className="candidate-tile pilot-candidate" onClick={() => openPilot(candidate)}>
@@ -549,7 +525,7 @@ export default function App() {
                 <small className={candidate.latest_route ? "status-reviewed" : "status-pending"}>{candidate.latest_route ? `● ${ROUTE_LABEL[candidate.latest_route]}` : "● Ожидает рассмотрения"}</small>
               </button>
           ))}
-          {candidates.map((candidate) => {
+          {candidates.map((candidate, index) => {
             const example = examples.find((item) => item.id === candidate.id);
             return (
               <button
@@ -558,9 +534,9 @@ export default function App() {
                 disabled={!example}
                 onClick={() => example && openExample(example)}
               >
-                <div className="candidate-tile-top"><span className="candidate-avatar">{candidate.title.charAt(0)}</span><span className="candidate-arrow">↗</span></div>
-                <strong>{candidate.title}</strong>
-                <span className="candidate-id">{candidate.id} · Лидерские способности</span>
+                <div className="candidate-tile-top"><span className="candidate-avatar">{String(index + 1).padStart(2, "0")}</span><span className="candidate-arrow">↗</span></div>
+                <strong>Кандидат {String(index + 1).padStart(2, "0")}</strong>
+                <span className="candidate-id">Лидерские способности</span>
                 <small className={candidate.latest_review ? "status-reviewed" : "status-pending"}>{candidate.latest_review
                   ? `● ${ROUTE_LABEL[candidate.latest_review.selected_route]}`
                   : "● Ожидает рассмотрения"}</small>
@@ -664,7 +640,7 @@ export default function App() {
           {busy && <p className="loading-note">Анализируем ответ и проверяем цитаты…</p>}
           <p className="muted small">
             Система не принимает решений о поступлении и не выставляет балл по
-            блокам Wounded leadership и «Ценности». Регион, школа, язык и доход
+            блокам личного опыта и «Ценности». Регион, школа, язык и доход
             семьи не влияют на рекомендацию.
           </p>
         </section>}

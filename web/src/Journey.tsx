@@ -16,7 +16,7 @@ export interface JourneyResult {
 const COPY = {
   en: {
     badge: "QADAM · DISCOVER YOUR IMPACT", title: "Show us how you act.",
-    subtitle: "One real story. One small team challenge. No perfect answers.",
+    subtitle: "Two short tasks, about five minutes. Answer in text, by voice or on video.",
     steps: ["Choose a format", "Your story", "Team challenge", "Review"],
     intro: "How would you like to tell your story?", introHint: "Choose the most comfortable way. We look at what you did, not your camera or writing style.",
     modes: { text: ["Write", "A short answer, not an essay"], audio: ["Speak", "Record a voice note"], video: ["Record video", "Or use an existing clip"] },
@@ -44,7 +44,7 @@ const COPY = {
   },
   kk: {
     badge: "QADAM · ӨЗ ІЗІҢІЗДІ КӨРСЕТІҢІЗ", title: "Қалай әрекет ететініңізді көрсетіңіз.",
-    subtitle: "Бір шынайы оқиға. Бір шағын командалық жағдай. Мінсіз жауап жоқ.",
+    subtitle: "Екі қысқа тапсырма, шамамен бес минут. Мәтінмен, дауыспен немесе бейнемен жауап беріңіз.",
     steps: ["Форматты таңдау", "Сіздің оқиғаңыз", "Командалық жағдай", "Тексеру"],
     intro: "Оқиғаңызды қалай айтқыңыз келеді?", introHint: "Өзіңізге ыңғайлы тәсілді таңдаңыз. Камера не жазу мәнері емес, әрекетіңіз маңызды.",
     modes: { text: ["Жазу", "Эссе емес, қысқа жауап"], audio: ["Айту", "Дыбыстық хабар жазу"], video: ["Бейне жазу", "Не дайын бейнені таңдау"] },
@@ -72,7 +72,7 @@ const COPY = {
   },
   ru: {
     badge: "QADAM · ПОКАЖИ СВОЙ ПУТЬ", title: "Покажи, как ты действуешь.",
-    subtitle: "Одна реальная история. Одна небольшая ситуация. Без идеальных ответов.",
+    subtitle: "Два коротких задания примерно на пять минут. Можно ответить текстом, голосом или видео.",
     steps: ["Выбор формата", "Твоя история", "Командная ситуация", "Проверка"],
     intro: "Как тебе удобнее рассказать свою историю?", introHint: "Выбери подходящий способ. Нам важны действия, а не качество камеры или стиль письма.",
     modes: { text: ["Написать", "Короткий ответ, не эссе"], audio: ["Рассказать", "Записать голосовое"], video: ["Записать видео", "Или выбрать готовый фрагмент"] },
