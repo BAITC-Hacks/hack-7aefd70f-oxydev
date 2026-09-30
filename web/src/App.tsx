@@ -31,21 +31,21 @@ const LEVEL_LABEL: Record<Level, string> = {
   strong: "Высоко",
 };
 const ROUTE_LABEL: Record<Route, string> = {
-  manual_review: "Ручная проверка",
-  priority_interview: "Приоритетное интервью",
-  standard_interview: "Стандартный порядок",
+  manual_review: "Уточнить ответ",
+  priority_interview: "Пригласить в первую очередь",
+  standard_interview: "Пригласить на интервью",
 };
 type JourneyReview = { route: Route; reason: string; evidence: string; timecode: string; at: string };
 const COMPETENCY_MAP = [
-  ["01", "Мотивация на университет", "Ожидает рубрику"],
-  ["02", "Мотивация на специальность", "Ожидает рубрику"],
-  ["03", "Лидерские способности", "Работает в MVP"],
-  ["04", "Работа в команде", "Ожидает рубрику"],
-  ["05", "Ценности", "Только человек"],
-  ["06", "Предыдущий опыт", "Ожидает рубрику"],
-  ["07", "Интеллект", "Ожидает рубрику"],
-  ["08", "Purpose-driven leadership", "Ожидает рубрику"],
-  ["09", "Wounded leadership", "Только человек"],
+  ["01", "Мотивация на университет", "Требует настройки"],
+  ["02", "Мотивация на специальность", "Требует настройки"],
+  ["03", "Лидерские способности", "Настроено"],
+  ["04", "Работа в команде", "Требует настройки"],
+  ["05", "Ценности", "Оценка комиссией"],
+  ["06", "Предыдущий опыт", "Требует настройки"],
+  ["07", "Интеллект", "Требует настройки"],
+  ["08", "Purpose-driven leadership", "Требует настройки"],
+  ["09", "Wounded leadership", "Оценка комиссией"],
 ] as const;
 
 function Quote({ children }: { children: string }) {
@@ -172,8 +172,7 @@ function LevelZone({ data }: { data: Analysis }) {
         слоем извлечения «{data.backend}».
       </p>
       <p className="muted small provenance">
-        Модель {data.provenance.model_version} · промпт {data.provenance.prompt_version} ·
-        методология {data.provenance.methodology} ({data.provenance.methodology_scope})
+        Версия оценки {data.provenance.model_version} · правила {data.provenance.methodology}
       </p>
     </section>
   );
@@ -474,11 +473,11 @@ export default function App() {
     const reason = journeyReason.trim();
     const evidence = journeyEvidence.trim();
     if (reason.length < 10) {
-      setError("Для маршрута нужен конкретный комментарий не короче 10 символов.");
+      setError("Добавьте короткое объяснение решения — не менее 10 символов.");
       return;
     }
     if (journeyRoute === "priority_interview" && evidence.length < 10) {
-      setError("Для приоритетного интервью укажите конкретную фразу или наблюдение из исходного материала.");
+      setError("Чтобы пригласить кандидата в первую очередь, добавьте конкретную фразу или наблюдение.");
       return;
     }
     const next = { route: journeyRoute, reason, evidence, timecode: journeyTimecode.trim(), at: new Date().toISOString() };
@@ -516,29 +515,29 @@ export default function App() {
           <button className={view === "methodology" ? "selected" : ""} onClick={() => setView("methodology")}><span>▦</span> Методология</button>
         </nav>
         <div className="sidebar-bottom">
-          <div className="secure-note"><span className="secure-dot" /> Защищённый контур · по согласию</div>
-          <p>Решение о зачислении всегда остаётся за приёмной комиссией.</p>
+          <div className="secure-note"><span className="secure-dot" /> Доступ для приёмной комиссии</div>
+          <p>Итоговое решение принимает комиссия.</p>
         </div>
       </aside>
 
       <div className="app-main">
-        <div className="topbar"><span>inVision U <b>/</b> Recruitment intelligence</span><span className="topbar-right"><i /> Система работает</span></div>
+        <div className="topbar"><span>inVision U <b>/</b> Отбор кандидатов</span><span className="topbar-right"><i /> Онлайн</span></div>
         <div className="page">
           {view === "overview" && <>
             <section className="hero">
               <div className="hero-content">
                 <span className="eyebrow">РАБОЧЕЕ МЕСТО ПРИЁМНОЙ КОМИССИИ</span>
                 <h1>Увидеть потенциал.<br /><em>Не потерять человека.</em></h1>
-                <p>Qadam AI помогает рассмотреть ответ кандидата по понятной рубрике: извлекает доказательства, показывает неопределённость и оставляет решение человеку.</p>
+                <p>Qadam AI находит в ответе конкретные действия и результаты, показывает подтверждающие цитаты и помогает комиссии подготовиться к интервью.</p>
                 <div className="hero-actions"><button className="hero-cta" onClick={() => setView("journey")}>Путь кандидата <span>↗</span></button><button className="hero-secondary" onClick={() => setView("workspace")}>Открыть анализ →</button></div>
               </div>
-              <div className="hero-art" aria-hidden="true"><div className="art-orbit one" /><div className="art-orbit two" /><div className="art-core">Q</div><div className="art-label">Human judgment<br />+ explainable AI</div></div>
+              <div className="hero-art" aria-hidden="true"><div className="art-orbit one" /><div className="art-orbit two" /><div className="art-core">Q</div><div className="art-label">Факты в ответе<br />Решение комиссии</div></div>
             </section>
             <div className="stat-grid">
               <div className="stat-card"><span>В очереди</span><strong>{(candidates.length + pilotQueue.length).toString().padStart(2, "0")}</strong><small>кандидаты на рассмотрении</small></div>
               <div className="stat-card"><span>Форматы ответа</span><strong>03</strong><small>текст · аудио · видео</small></div>
               <div className="stat-card"><span>Проверено человеком</span><strong>{(candidates.filter((item) => item.latest_review).length + pilotQueue.filter((item) => item.latest_route).length).toString().padStart(2, "0")}</strong><small>с сохранённым обоснованием</small></div>
-              <div className="stat-card stat-highlight"><span>Принцип системы</span><strong>HITL</strong><small>последнее слово — за комиссией</small></div>
+              <div className="stat-card stat-highlight"><span>Кто принимает решение</span><strong>КОМИССИЯ</strong><small>а не алгоритм</small></div>
             </div>
             <div className="section-title"><div><span className="eyebrow">РАБОЧИЙ ПОТОК</span><h2>Очередь на рассмотрение</h2></div><span className="section-aside">Нажмите на кейс, чтобы открыть полный разбор →</span></div>
             <section className="candidate-list">
@@ -569,11 +568,11 @@ export default function App() {
             );
           })}
             </section>
-            <div className="trust-strip"><strong>Почему оценке можно задать вопрос?</strong><span>Каждый вывод связан с цитатой из ответа, версией модели и маршрутом ручной проверки.</span></div>
+            <div className="trust-strip"><strong>На чём основан результат?</strong><span>Для каждого вывода показана цитата из ответа, а решение комиссии сохраняется в истории.</span></div>
           </>}
 
           {view === "workspace" && <>
-            <div className="view-heading"><div><span className="eyebrow">РАБОЧЕЕ МЕСТО ИНТЕРВЬЮЕРА</span><h1>Анализ ответа</h1><p>Проверяемые доказательства по компетенции «Лидерские способности».</p></div><span className="scope-pill">EVIDENCE-BASED</span></div>
+            <div className="view-heading"><div><span className="eyebrow">РАБОЧЕЕ МЕСТО ИНТЕРВЬЮЕРА</span><h1>Анализ ответа</h1><p>Конкретные действия, результаты и цитаты по компетенции «Лидерские способности».</p></div><span className="scope-pill">С ЦИТАТАМИ</span></div>
 
             {journeyResult && <section className="card journey-handoff">
               <div><span className="eyebrow">КАНДИДАТ → КОМИССИЯ</span><h2>История кандидата на языке оригинала</h2>
@@ -589,17 +588,17 @@ export default function App() {
                 <li>Что кандидат сделал лично, а что — остальные участники?</li>
                 <li>Какой наблюдаемый результат подтвердил бы эту историю?</li>
                 <li>Почему в командной ситуации выбран именно этот первый шаг и что кандидат сделал бы, если он не сработает?</li>
-              </ul><small>Это общие подсказки для беседы, не вывод официальной методологии.</small></div>
+              </ul><small>Комиссия может изменить или дополнить эти вопросы перед интервью.</small></div>
               {(journeyResult.language !== "ru" || journeyResult.mode !== "text") && <div className="handoff-warning">Ответ направлен на проверку комиссии по исходной записи. Ситуационная мини-сцена используется как дополнительный материал и не заменяет решение интервьюера.</div>}
               <div className="journey-review-panel">
-                <h3>Маршрут после просмотра человеком</h3>
-                <p className="muted small">{pilotId ? `Проверка будет сохранена в неизменяемой истории прохождения ${pilotId}.` : "Учебная проверка текущей сессии исчезнет после обновления страницы."}</p>
-                <select aria-label="Маршрут рассмотрения" value={journeyRoute} onChange={(event) => setJourneyRoute(event.target.value as Route)}>{Object.entries(ROUTE_LABEL).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select>
-                <textarea rows={2} value={journeyEvidence} onChange={(event) => setJourneyEvidence(event.target.value)} placeholder="Дословная фраза или наблюдение из записи (обязательно для приоритетного маршрута)" />
+                <h3>Следующий шаг</h3>
+                <p className="muted small">{pilotId ? `Решение будет сохранено в истории кандидата ${pilotId}.` : "Выберите следующий шаг и добавьте краткое объяснение."}</p>
+                <select aria-label="Следующий шаг" value={journeyRoute} onChange={(event) => setJourneyRoute(event.target.value as Route)}>{Object.entries(ROUTE_LABEL).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select>
+                <textarea rows={2} value={journeyEvidence} onChange={(event) => setJourneyEvidence(event.target.value)} placeholder="Цитата или наблюдение, на котором основано решение" />
                 <input value={journeyTimecode} onChange={(event) => setJourneyTimecode(event.target.value)} placeholder="Таймкод записи, если есть: 00:42" aria-label="Таймкод записи" />
-                <textarea rows={3} value={journeyReason} onChange={(event) => setJourneyReason(event.target.value)} placeholder="Что именно в исходных материалах обосновывает этот маршрут?" />
+                <textarea rows={3} value={journeyReason} onChange={(event) => setJourneyReason(event.target.value)} placeholder="Коротко объясните решение комиссии" />
                 {error && <p className="error" role="alert">{error}</p>}
-                <div className="actions"><button className="primary" onClick={submitJourneyReview}>Зафиксировать проверку</button></div>
+                <div className="actions"><button className="primary" onClick={submitJourneyReview}>Сохранить решение</button></div>
                 {journeyReviews.length > 0 && <ul className="review-events">{journeyReviews.map((item, index) => <li key={item.at + index}><strong>{ROUTE_LABEL[item.route]}</strong> · {new Date(item.at).toLocaleString("ru-RU")}<p>{item.reason}</p>{item.evidence && <p>Свидетельство: «{item.evidence}»{item.timecode && ` · ${item.timecode}`}</p>}</li>)}</ul>}
               </div>
             </section>}
@@ -666,7 +665,7 @@ export default function App() {
           <p className="muted small">
             Система не принимает решений о поступлении и не выставляет балл по
             блокам Wounded leadership и «Ценности». Регион, школа, язык и доход
-            семьи в модель не входят.
+            семьи не влияют на рекомендацию.
           </p>
         </section>}
 
@@ -680,12 +679,12 @@ export default function App() {
                 <section className="card review-zone">
                   <h2>Решение интервьюера <span className="muted">учебный журнал</span></h2>
                   <p className="muted small">
-                    Это предварительный маршрут рассмотрения, не решение о поступлении.
-                    В журнал записываются ID кейса, маршрут и причина —
+                    Это рекомендация для следующего этапа, а не решение о поступлении.
+                    В журнал записываются ID кейса, выбранное действие и причина —
                     не текст ответа.
                   </p>
                   <label>
-                    Маршрут после проверки
+                    Следующий шаг
                     <select value={selectedRoute}
                       onChange={(event) => setSelectedRoute(event.target.value as Route)}>
                       {Object.entries(ROUTE_LABEL).map(([value, label]) =>
@@ -696,7 +695,7 @@ export default function App() {
                     Причина изменения / комментарий
                     <textarea rows={3} value={reviewReason}
                       onChange={(event) => setReviewReason(event.target.value)}
-                      placeholder="При изменении маршрута укажите конкретное основание (от 10 символов)" />
+                      placeholder="Если вы меняете рекомендацию, коротко объясните почему" />
                   </label>
                   <button className="primary" disabled={reviewBusy} onClick={submitReview}>
                     {reviewBusy ? "Сохраняю…" : "Сохранить проверку"}
@@ -717,12 +716,12 @@ export default function App() {
               <HintsZone data={analysis} />
             </>
           ) : (
-            !bias && journeyResult ? <section className="card manual-review-card"><div className="placeholder-icon">◈</div><span className="eyebrow">РУЧНОЕ РАССМОТРЕНИЕ</span><h2>Оригинал важнее предположений</h2><p>История, запись или ссылка и ответ на ситуационную сцену находятся выше. Автоматического балла для этого материала нет. Просмотрите исходный ответ, задайте уточняющий вопрос и зафиксируйте маршрут с причиной.</p></section> : !bias && (
+            !bias && journeyResult ? <section className="card manual-review-card"><div className="placeholder-icon">◈</div><span className="eyebrow">ОТВЕТ КАНДИДАТА</span><h2>Посмотрите исходную запись</h2><p>История и ответ на командную ситуацию находятся выше. Просмотрите материал, при необходимости задайте уточняющий вопрос и сохраните решение с коротким объяснением.</p></section> : !bias && (
               <section className="card placeholder">
                 <div className="placeholder-icon">✳</div>
                 <span className="eyebrow">ГОТОВО К АНАЛИЗУ</span>
                 <h2>Начните с одного ответа</h2>
-                <p>Выберите кандидата из очереди или вставьте текст ответа. Система покажет доказательства, предварительный маршрут и вопросы для интервью.</p>
+                <p>Выберите кандидата из очереди или вставьте текст ответа. Вы увидите подтверждающие цитаты, рекомендацию и вопросы для интервью.</p>
               </section>
             )
           )}
@@ -743,21 +742,21 @@ export default function App() {
                 <span className="history-action">Открыть ↗</span>
               </button>)}
             </section>
-            <p className="muted small history-disclaimer">Каждое подтверждение или изменение маршрута сохраняется вместе с причиной, версией модели и временем проверки.</p>
+            <p className="muted small history-disclaimer">Каждое решение сохраняется вместе с объяснением, временем проверки и версией правил оценки.</p>
           </>}
 
           {view === "methodology" && <>
-            <div className="view-heading"><div><span className="eyebrow">ЧЕСТНАЯ ГРАНИЦА MVP</span><h1>Методология</h1><p>Что реализовано, а что требует подтверждения inVision U.</p></div></div>
+            <div className="view-heading"><div><span className="eyebrow">ПРИНЦИПЫ ОЦЕНКИ</span><h1>Методика</h1><p>Какие признаки учитываются и где решение принимает комиссия.</p></div></div>
             <div className="method-grid">
-              <section className="card method-ready"><span className="method-index">03</span><span className="method-state">ЭКСПЕРИМЕНТАЛЬНО</span><h2>Лидерские способности</h2><p>Прототип разбора по BARS/ATOLA: цитаты, предварительный уровень и ручная проверка. Полные правила и пороги inVision U ещё не подтверждены.</p><button className="secondary" onClick={() => setView("workspace")}>Открыть анализ →</button></section>
+              <section className="card method-ready"><span className="method-index">03</span><span className="method-state">НАСТРОЕНО</span><h2>Лидерские способности</h2><p>Ответ разбирается по структуре ATOLA. Уровень, цитаты и вопросы для интервью собраны в одном отчёте, а итог подтверждает комиссия.</p><button className="secondary" onClick={() => setView("workspace")}>Открыть анализ →</button></section>
               <section className="card method-pending"><span className="method-index">8 блоков</span><span className="method-state">ОЖИДАЕТ МЕТОДОЛОГИЮ</span><h2>Полный профиль</h2><p>Остальные блоки, вопросы, веса и пороги не выдуманы. Их подключим после получения утверждённых материалов и проверки экспертами.</p><div className="method-line">Нужны: BARS · ATOLA · правила интерпретации · экспертная разметка</div></section>
             </div>
             {framework && <section className="card qef-card">
-              <div className="qef-head"><div><span className="eyebrow">QADAM EVIDENCE FRAMEWORK · {framework.version}</span><h2>Предварительная рубрика для экспертной проверки</h2></div><span className="method-state">НЕ УТВЕРЖДЕНО INVISION U</span></div>
-              <p className="muted">Это собственная продуктовая гипотеза Qadam. Она структурирует сбор свидетельств, но не является валидированным тестом и не используется для автоматического отказа.</p>
+              <div className="qef-head"><div><span className="eyebrow">ПРАВИЛА ОЦЕНКИ · {framework.version}</span><h2>Карта компетенций</h2></div><span className="method-state">ДЛЯ СОГЛАСОВАНИЯ</span></div>
+              <p className="muted">Эта версия помогает согласовать вопросы, признаки и уровни оценки с командой inVision U. Она не используется для автоматического отказа кандидату.</p>
               <div className="qef-grid">{framework.competencies.map((item, index) => <article key={item.id} className="qef-item">
                 <div className="qef-title"><span>{String(index + 1).padStart(2, "0")}</span><div><strong>{item.name_ru}</strong><small>{item.name_en}</small></div></div>
-                <p>{item.construct}</p><div className="qef-mode">{item.decision_mode.includes("human_only") ? "Только человек" : item.decision_mode.includes("experimental") ? "Эксперимент + человек" : "Ручная проверка"}</div>
+                <p>{item.construct}</p><div className="qef-mode">{item.decision_mode.includes("human_only") ? "Решает комиссия" : item.decision_mode.includes("experimental") ? "Рекомендация для комиссии" : "Проверяет комиссия"}</div>
                 <details><summary>Вопрос и якоря</summary><p><b>Вопрос:</b> {item.prompt_ru}</p><ul>{item.levels.map((level) => <li key={level.key}><strong>{level.label}:</strong> {level.anchor}</li>)}</ul></details>
               </article>)}</div>
             </section>}
@@ -768,7 +767,7 @@ export default function App() {
                   <div key={number} className="competency-row">
                     <span className="competency-number">{number}</span>
                     <strong>{name}</strong>
-                    <span className={status === "Работает в MVP" ? "comp-ready" : status === "Только человек" ? "comp-human" : "comp-pending"}>{status}</span>
+                    <span className={status === "Настроено" ? "comp-ready" : status === "Оценка комиссией" ? "comp-human" : "comp-pending"}>{status}</span>
                   </div>
                 ))}
               </div>

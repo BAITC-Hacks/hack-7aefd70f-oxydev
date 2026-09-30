@@ -14,10 +14,10 @@ test("English candidate story reaches human review without an invented score", a
   await page.getByRole("button", { name: "Open reviewer view" }).click();
   await expect(page.getByRole("heading", { name: "История кандидата на языке оригинала" })).toBeVisible();
   await expect(page.getByText("Ситуационная мини-сцена используется как дополнительный материал", { exact: false })).toBeVisible();
-  await page.getByRole("button", { name: "Зафиксировать проверку" }).click();
-  await expect(page.getByRole("alert").getByText("Для маршрута нужен конкретный комментарий", { exact: false })).toBeVisible();
-  await page.getByPlaceholder("Что именно в исходных материалах обосновывает этот маршрут?").fill("Нужно уточнить конкретную роль и проверить результат истории.");
-  await page.getByRole("button", { name: "Зафиксировать проверку" }).click();
+  await page.getByRole("button", { name: "Сохранить решение" }).click();
+  await expect(page.getByRole("alert").getByText("Добавьте короткое объяснение решения", { exact: false })).toBeVisible();
+  await page.getByPlaceholder("Коротко объясните решение комиссии").fill("Нужно уточнить конкретную роль и проверить результат истории.");
+  await page.getByRole("button", { name: "Сохранить решение" }).click();
   await expect(page.getByText("Нужно уточнить конкретную роль и проверить результат истории.")).toBeVisible();
   await expect(page.getByRole("button", { name: "Скачать отчёт JSON" })).toHaveCount(0);
 });
@@ -57,12 +57,12 @@ test("Russian text gets experimental analysis and priority route needs evidence"
   await page.getByRole("checkbox").check();
   await page.getByRole("button", { name: "Открыть кабинет комиссии" }).click();
   await expect(page.getByRole("heading", { name: "Разбор ATOLA" })).toBeVisible();
-  await page.getByLabel("Маршрут рассмотрения").selectOption("priority_interview");
-  await page.getByPlaceholder("Что именно в исходных материалах обосновывает этот маршрут?").fill("Кандидат описал конкретные действия и измеримый результат.");
-  await page.getByRole("button", { name: "Зафиксировать проверку" }).click();
-  await expect(page.getByText("Для приоритетного интервью укажите конкретную фразу").first()).toBeVisible();
-  await page.getByPlaceholder("Дословная фраза или наблюдение из записи (обязательно для приоритетного маршрута)").fill("составил общее расписание и распределил небольшие роли");
-  await page.getByRole("button", { name: "Зафиксировать проверку" }).click();
+  await page.getByLabel("Следующий шаг").selectOption("priority_interview");
+  await page.getByPlaceholder("Коротко объясните решение комиссии").fill("Кандидат описал конкретные действия и измеримый результат.");
+  await page.getByRole("button", { name: "Сохранить решение" }).click();
+  await expect(page.getByText("Чтобы пригласить кандидата в первую очередь", { exact: false }).first()).toBeVisible();
+  await page.getByPlaceholder("Цитата или наблюдение, на котором основано решение").fill("составил общее расписание и распределил небольшие роли");
+  await page.getByRole("button", { name: "Сохранить решение" }).click();
   await expect(page.getByText("Кандидат описал конкретные действия и измеримый результат.")).toBeVisible();
 });
 
@@ -99,8 +99,8 @@ test("video can be recorded locally without an upload", async ({ page }) => {
 
 test("provisional nine-block framework is visible and clearly labelled", async ({ page }) => {
   await page.goto("/?view=methodology");
-  await expect(page.getByRole("heading", { name: "Предварительная рубрика для экспертной проверки" })).toBeVisible();
-  await expect(page.getByText("НЕ УТВЕРЖДЕНО INVISION U")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Карта компетенций", exact: true })).toBeVisible();
+  await expect(page.getByText("ДЛЯ СОГЛАСОВАНИЯ")).toBeVisible();
   await expect(page.locator(".qef-item")).toHaveCount(9);
   await expect(page.getByText("Ценности в действии", { exact: true })).toBeVisible();
   await expect(page.getByText("Развитие через трудности", { exact: true })).toBeVisible();

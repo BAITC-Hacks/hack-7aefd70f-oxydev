@@ -232,7 +232,7 @@ export async function uploadPilotMedia(id: string, blob: Blob): Promise<void> {
 
 export async function loadPilotSubmissions(): Promise<PilotSubmission[]> {
   const response = await fetch("/pilot/submissions");
-  if (!response.ok) throw new Error(`${response.status}: пилотная очередь недоступна`);
+  if (!response.ok) throw new Error(`${response.status}: очередь кандидатов недоступна`);
   return (await response.json()) as PilotSubmission[];
 }
 
